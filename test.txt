@@ -1,0 +1,25 @@
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dropout, Flatten, Dense, Input
+from tensorflow.keras.applications import MobileNetV2
+
+# Load MobileNetV2 as the base model
+baseModel = MobileNetV2(weights="imagenet", include_top=False, input_shape=(124, 124, 3))
+
+# Freeze the weights of the base model
+for layer in baseModel.layers:
+    layer.trainable = False
+
+# Define the head model
+headModel = baseModel.output
+headModel = MaxPooling2D(pool_size=(2, 2))(headModel)
+headModel = Flatten()(headModel)
+headModel = Dropout(0.5)(headModel)
+headModel = Dense(50, activation='relu')(headModel)
+headModel = Dropout(0.5)(headModel)
+headModel = Dense(1, activation='sigmoid')(headModel)
+
+# Combine the base model and head model
+model = Model(inputs=baseModel.input, outputs=headModel)
+
+# Compile the model
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
