@@ -3,7 +3,7 @@ pandas
 matplotlib
 tensorflow
 keras
-opencv-python
+opencv-python-headless
 flask
 requests
 gunicorn
