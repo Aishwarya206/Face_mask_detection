@@ -6,3 +6,4 @@ keras
 opencv-python
 flask
 requests
+gunicorn
